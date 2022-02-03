@@ -45,6 +45,7 @@ public class DisplayManager {
 			GLFW.glfwSwapInterval(1);
 		}
 		
+		
 		GLFW.glfwMakeContextCurrent(window);
 		GLFW.glfwWindowHint(GLFW.GLFW_VERSION_MAJOR, 3);
 		GLFW.glfwWindowHint(GLFW.GLFW_VERSION_MAJOR, 2);
@@ -53,8 +54,7 @@ public class DisplayManager {
 		
 		GL.createCapabilities();
 		
-		GL11.glClearColor(1, 0, 0, 1);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+//		setClearColor(0.0f, 0.3f, 0.5f, 1f);
 		
 		while(!shouldClose()) {
 			update();
@@ -65,15 +65,30 @@ public class DisplayManager {
 	}
 	
 	public void update() {
-		GLFW.glfwPollEvents();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		
+		render();
+		
+		// Swap front and back buffers
 		GLFW.glfwSwapBuffers(window);
+		
+		// Calls poll events for window
+		GLFW.glfwPollEvents();
+	}
+	
+	public void render() {
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		GL11.glVertex2f(-0.5f, -0.5f);
+		GL11.glVertex2f(-0.0f, 0.5f);
+		GL11.glVertex2f(0.5f, -0.5f);
+		GL11.glEnd();
 	}
 	
 	public boolean isVSynced() {
 		return vSync;
 	}
 	
-	public void setClearColor(int r, int g, int b, int a) {
+	public void setClearColor(float r, float g, float b, float a) {
 		GL11.glClearColor(r, g, b, a);
 	}
 	
