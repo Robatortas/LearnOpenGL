@@ -3,6 +3,7 @@ package robatortas.code.files.core;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
 public class DisplayManager {
@@ -45,7 +46,6 @@ public class DisplayManager {
 			GLFW.glfwSwapInterval(1);
 		}
 		
-		
 		GLFW.glfwMakeContextCurrent(window);
 		GLFW.glfwWindowHint(GLFW.GLFW_VERSION_MAJOR, 3);
 		GLFW.glfwWindowHint(GLFW.GLFW_VERSION_MAJOR, 2);
@@ -54,7 +54,8 @@ public class DisplayManager {
 		
 		GL.createCapabilities();
 		
-//		setClearColor(0.0f, 0.3f, 0.5f, 1f);
+
+		vertexBuffer();
 		
 		while(!shouldClose()) {
 			update();
@@ -62,6 +63,19 @@ public class DisplayManager {
 		
 		GLFW.glfwDestroyWindow(window);
 		GLFW.glfwTerminate();
+	}
+	
+	public void vertexBuffer() {
+		float[] positions = {
+				-0.5f, -0.5f,
+				-0.0f,  0.5f,
+				 0.5f, -0.5f
+		};
+		
+		int buffer = 0;
+		GL30.nglGenBuffers(1, buffer);
+		GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, buffer);
+		GL30.glBufferData(GL30.GL_ARRAY_BUFFER, positions, GL30.GL_STATIC_DRAW);
 	}
 	
 	public void update() {
@@ -77,11 +91,12 @@ public class DisplayManager {
 	}
 	
 	public void render() {
-		GL11.glBegin(GL11.GL_TRIANGLES);
-		GL11.glVertex2f(-0.5f, -0.5f);
-		GL11.glVertex2f(-0.0f, 0.5f);
-		GL11.glVertex2f(0.5f, -0.5f);
-		GL11.glEnd();
+//		GL11.glBegin(GL11.GL_TRIANGLES);
+//		GL11.glVertex2f(-0.5f, -0.5f);
+//		GL11.glVertex2f(-0.0f, 0.5f);
+//		GL11.glVertex2f(0.5f, -0.5f);
+//		GL11.glEnd();
+		GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, HEIGHT);
 	}
 	
 	public boolean isVSynced() {
