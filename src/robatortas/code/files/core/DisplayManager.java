@@ -3,7 +3,9 @@ package robatortas.code.files.core;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryUtil;
 
 public class DisplayManager {
@@ -53,7 +55,6 @@ public class DisplayManager {
 		GLFW.glfwSetWindowPos(window, getWidth()/2, getHeight()/2);
 		
 		GL.createCapabilities();
-		
 
 		vertexBuffer();
 		
@@ -66,22 +67,36 @@ public class DisplayManager {
 	}
 	
 	public void vertexBuffer() {
-		float[] positions = {
+		float positions[] = new float []{
 				-0.5f, -0.5f,
 				-0.0f,  0.5f,
 				 0.5f, -0.5f
 		};
 		
 		int buffer = 0;
+		// Generates a buffer
 		GL30.nglGenBuffers(1, buffer);
+		// Binds buffer to GL_ARRAY_BUFFER
 		GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, buffer);
+		// Copies vertex data into the buffer's memory
 		GL30.glBufferData(GL30.GL_ARRAY_BUFFER, positions, GL30.GL_STATIC_DRAW);
+		
+//		GL30.glEnableVertexAttribArray(0);
+		
+		// 4*2 because each vertex is 4 bytes
+		GL30.glVertexAttribPointer(0, 2, GL30.GL_FLOAT, false, 4*2, 0);
+//		GL30.glDrawArrays(GL30.GL_FLOAT, 0, 3);
+		
+		GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0);
 	}
 	
 	public void update() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		render();
+		
+
+		GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, 3);
 		
 		// Swap front and back buffers
 		GLFW.glfwSwapBuffers(window);
@@ -96,7 +111,7 @@ public class DisplayManager {
 //		GL11.glVertex2f(-0.0f, 0.5f);
 //		GL11.glVertex2f(0.5f, -0.5f);
 //		GL11.glEnd();
-		GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, HEIGHT);
+//		GL30.glDrawElements(GL30.GL_TRIANGLES, 3, GL30.GL_ALPHA_INTEGER, 0;
 	}
 	
 	public boolean isVSynced() {
